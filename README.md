@@ -1,6 +1,6 @@
 # QA Challenge – Playwright + TypeScript
 
-Este projeto contém a automação de testes para UI e API, utilizando Playwright e TypeScript, conforme o desafio técnico proposto.
+Este projeto contém a automação de testes para UI e API, utilizando Playwright e TypeScript.
 
 ---
 
