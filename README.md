@@ -80,96 +80,91 @@ qa-challenge/
   "test:ui": "npx playwright test tests/ui",
   "test:api": "npx playwright test tests/api"
 }
+
 ```
-BDD/Gherkin Testes E2E
-Com certeza! Aqui estão os BDDs/Gherkin atualizados para português (Dado, Quando, Então):
 
-Feature: Testes de Interface de Usuário (UI)
-Cenário: CT001 - Login com credenciais válidas
-Dado: Que o usuário está na página de login da Sauce Demo
-Quando: Ele insere as credenciais válidas "standard_user" no campo de usuário
-E: Ele insere "secret_sauce" no campo de senha
-E: Ele clica no botão "Login"
-Então: O usuário deve ser redirecionado para a página de inventário
-E: O título da página deve ser "Products"
+---
 
-Cenário: CT002 - Login com credenciais inválidas
-Dado: Que o usuário está na página de login da Sauce Demo
-Quando: Ele insere credenciais inválidas "usuario_invalido" no campo de usuário
-E: Ele insere "senha_errada" no campo de senha
-E: Ele clica no botão "Login"
-Então: Uma mensagem de erro deve ser exibida
-E: A mensagem de erro deve conter o texto "Username and password do not match"
+## ⚙️ BDD
 
-Cenário: CT003 - Adicionar e remover produtos do carrinho
-Dado: Que o usuário está logado no site da Sauce Demo
-Quando: Ele adiciona "Sauce Labs Backpack" ao carrinho
-E: Ele adiciona "Sauce Labs Bike Light" ao carrinho
-E: Ele adiciona "Sauce Labs Bolt T-Shirt" ao carrinho
-E: Ele remove "Sauce Labs Backpack" do carrinho
-E: Ele remove "Sauce Labs Bike Light" do carrinho
-E: Ele navega para a página do carrinho
-Então: O carrinho deve conter apenas 1 item
-E: O item restante no carrinho deve ser "Sauce Labs Bolt T-Shirt"
 
-Cenário: CT003.1 - Adicionar e remover produtos dinamicamente
-Dado: Que o usuário está logado no site da Sauce Demo
-Quando: Ele adiciona os 3 primeiros produtos exibidos ao carrinho
-E: Ele remove os 2 primeiros produtos adicionados do carrinho
-E: Ele navega para a página do carrinho
-Então: O carrinho deve conter apenas 1 item
+``` Funcionalidade: Testes da API Reqres.in
 
-Cenário: CT004 - Simular erro no checkout sem preencher dados obrigatórios
-Dado: Que o usuário está logado no site da Sauce Demo
-E: Ele adicionou um produto ao carrinho
-E: Ele navegou para a página do carrinho
-E: Ele clicou no botão "Checkout"
-Quando: Ele tenta continuar o processo de checkout sem preencher os dados obrigatórios
-Então: Uma mensagem de erro deve ser exibida
-E: A mensagem de erro deve ser "Error: First Name is required"
+   Funcionalidade: Testes da API (regres.spec.ts)
 
-BDD/Gherkin Testes API
-Cenário CT001 - GET /users?page=2 retorna usuários válidos
-Dado que eu tenho acesso à API Reqres
-Quando eu faço uma requisição GET para '/users?page=2'
-Então a resposta deve ter o status 200
-E o corpo da resposta deve ser um array de usuários
-E cada usuário deve ter um 'id'
-E cada usuário deve ter um 'email'
-E o 'email' de cada usuário deve estar em um formato válido
+  Cenário: CT001 - Consultar lista de usuários na página 2
+    Dado que realizo uma requisição GET para /users?page=2
+    Então a resposta deve conter o status 200
+    E a resposta deve conter uma lista de usuários com e-mails válidos
 
-Cenário CT002 - POST /users cria um novo usuário e salva o ID
-Dado que eu tenho acesso à API Reqres
-Quando eu faço uma requisição POST para '/users' com 'name' como 'Felipe' e 'job' como 'QA Engineer'
-Então a resposta deve ter o status 201
-E o corpo da resposta deve conter um 'id'
-E o 'id' do usuário criado deve ser salvo para uso posterior
+  Cenário: CT002 - Criar novo usuário
+    Quando envio uma requisição POST para /users com nome e cargo
+    Então a resposta deve conter o status 201
+    E o corpo da resposta deve conter o ID do novo usuário criado
 
-Cenário CT003 - PUT /users/id atualiza usuário e mede tempo de resposta
-Dado que eu tenho acesso à API Reqres
-E que eu tenho um 'userId' salvo de um teste anterior
-Quando eu faço uma requisição PUT para '/users/userId' com 'name' como 'Felipe Atualizado' e 'job' como 'Especialista QA'
-Então a resposta deve ter o status 200
-E o 'name' do usuário no corpo da resposta deve ser 'Felipe Atualizado'
-E o 'job' do usuário no corpo da resposta deve ser 'Especialista QA'
-E o corpo da resposta deve conter um 'updatedAt'
-E o tempo de resposta da requisição deve ser menor que 2000ms
+  Cenário: CT003 - Atualizar usuário existente
+    Dado que possuo o ID de um usuário criado
+    Quando envio uma requisição PUT para /users/:id com novos dados
+    Então a resposta deve conter o status 200
+    E os dados atualizados devem refletir no corpo da resposta
+    E o tempo de resposta deve ser inferior a 2000ms
 
-Cenário CT004 - Simula falha de rede ou timeout (URL inválida)
-Dado que eu tenho uma conexão de rede
-Quando eu tento fazer uma requisição GET para uma URL inválida como 'https://reqres.in.br/api/usuarios'
-Então uma falha de rede ou erro de timeout deve ser capturado
+  Cenário: CT004 - Simular falha de rede
+    Quando envio uma requisição GET para uma URL inválida
+    Então o sistema deve capturar e tratar o erro de rede
 
-Cenário CT005 - DELETE /users/999 retorna 204 (usuário pode não existir, mas é aceito)
-Dado que eu tenho acesso à API Reqres
-Quando eu faço uma requisição DELETE para '/users/999'
-Então a resposta deve ter o status 204
+  Cenário: CT005 - Deletar usuário inexistente
+    Quando envio uma requisição DELETE para /users/999
+    Então a resposta deve conter o status 204
 
-Cenário CT006 - Simula erro 404 com ID inexistente no GET
-Dado que eu tenho acesso à API Reqres
-Quando eu faço uma requisição GET para '/users/9999' (um ID inexistente)
-Então a resposta deve ter o status 404
+  Cenário: CT006 - Consultar usuário inexistente
+    Quando envio uma requisição GET para /users/9999
+    Então a resposta deve conter o status 404
 
+
+
+Funcionalidade: Testes E2E (swaglabs.spec.ts)
+
+  Cenário: CT001 - Login com credenciais válidas
+    Dado que o usuário acessa a página de login
+    Quando preenche o nome de usuário "standard_user" e a senha "secret_sauce"
+    E clica no botão de login
+    Então deve ser redirecionado para a página de inventário
+    E o título da página deve ser "Products"
+
+  Cenário: CT002 - Login com credenciais inválidas
+    Dado que o usuário acessa a página de login
+    Quando preenche o nome de usuário "usuario_invalido" e senha "senha_errada"
+    E clica no botão de login
+    Então uma mensagem de erro deve ser exibida
+    E a mensagem deve conter "Username and password do not match"
+
+  Cenário: CT003 - Adicionar e remover produtos do carrinho
+    Dado que o usuário faz login com credenciais válidas
+    Quando adiciona 3 produtos ao carrinho
+    E remove 2 produtos
+    E acessa o carrinho
+    Então o carrinho deve conter apenas 1 item
+    E o item restante deve ser "Sauce Labs Bolt T-Shirt"
+
+  Cenário: CT003.1 - Adicionar e remover produtos dinamicamente
+    Dado que o usuário faz login com credenciais válidas
+    Quando adiciona os 3 primeiros produtos listados
+    E remove os 2 primeiros produtos adicionados
+    E acessa o carrinho
+    Então o carrinho deve conter apenas 1 item
+    E o nome do item restante deve ser exibido no log
+
+  Cenário: CT004 - Simular erro no checkout sem preencher dados obrigatórios
+    Dado que o usuário faz login com credenciais válidas
+    E adiciona um produto ao carrinho
+    E acessa o checkout
+    Quando tenta continuar sem preencher os dados obrigatórios
+    Então deve ser exibida a mensagem de erro "Error: First Name is required"
+
+```
+
+---
 ## ✍️ Autor
 
 By **Felipe Eduardo** QA.
